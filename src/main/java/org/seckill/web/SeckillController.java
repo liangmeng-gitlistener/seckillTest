@@ -78,6 +78,7 @@ public class SeckillController {
     @ResponseBody
     public ResponseData<SeckillExcution> execute(String a){
         ResponseData<SeckillExcution> result = null;
+        int asd = 1 + 1;
         return result;
     }
 }

@@ -77,7 +77,7 @@ public class SeckillController {
             produces = {"application/json;charset=UTF-8"})
     @ResponseBody
     public ResponseData<SeckillExcution> execute(String a){
-        ResponseData<SeckillExcution> result;
+        ResponseData<SeckillExcution> result = null;
         return result;
     }
 }

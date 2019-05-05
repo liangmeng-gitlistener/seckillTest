@@ -27,7 +27,7 @@ public class SeckillDAOTest {
 
     @Test
     public void querryById() {
-        long seckillId = 1004;
+        long seckillId = 1003;
         Seckill seckill = seckillDAO.querryById(seckillId);
         System.out.println(seckill);
     }

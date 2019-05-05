@@ -12,7 +12,7 @@ CREATE TABLE seckill(
 `start_time` timestamp NOT NULL COMMENT '秒杀开启时间',
 `end_time` timestamp NOT NULL COMMENT '秒杀结束时间',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '秒杀单创建时间',
-`extent_field` varchar (120) COMMENT '扩展字段',
+`extend_field` varchar (120) COMMENT '扩展字段',
 PRIMARY KEY (seckill_id),
 key idx_start_time(start_time),
 key idx_end_time(end_time),

@@ -16,4 +16,15 @@ public class ResponseError<T> extends ResponseData<T> {
         this.success = false;
         this.info = failInfo;
     }
+
+    public ResponseError(String failInfo, T result){
+        this.success = false;
+        this.info = failInfo;
+        this.result = result;
+    }
+
+    public ResponseError(T result){
+        this.success = false;
+        this.result = result;
+    }
 }

@@ -32,7 +32,7 @@ values
 -- 用户登陆认证相关信息
 create table success_killed(
 `seckill_id` bigint NOT NULL COMMENT '秒杀商品id',
-`user_phone` int NOT NULL COMMENT '用户手机号',
+`user_phone` bigint NOT NULL COMMENT '用户手机号',
 `state` tinyint NOT NULL DEFAULT -1 COMMENT '状态标识：-1：无效 0成功 1已付款 2已发货',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 PRIMARY KEY (seckill_id,user_phone),/* 联合主键 */
@@ -41,3 +41,5 @@ key idx_create_time (create_time)
 
 --连接数据库控制台
 mysql -uroot -p
+
+-- https://github.com/wentjiang/secKill

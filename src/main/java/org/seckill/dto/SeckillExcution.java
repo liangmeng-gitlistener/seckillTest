@@ -11,8 +11,11 @@ import org.seckill.enums.SeckillStateEnum;
  **/
 public class SeckillExcution {
     private long seckillId;
+    //  秒杀执行的状态
     private int state;
+    //  状态表示
     private String info;
+    //  秒杀成功对象
     private SuccessKilled successKilled;
 
     public SeckillExcution(long seckillId, SeckillStateEnum stateEnum, SuccessKilled successKilled) {

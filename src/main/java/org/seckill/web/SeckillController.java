@@ -58,7 +58,7 @@ public class SeckillController {
             method = RequestMethod.POST,
             produces = {"application/json;charset=UTF-8"})
     @ResponseBody//json申明
-    public ResponseData<Exposer> exposer(Long seckillId){
+    public ResponseData<Exposer> exposer(@PathVariable("seckillId") Long seckillId){
         ResponseData<Exposer> result;
         try {
             Exposer exposer = seckillService.exportSeckillURL(seckillId);
@@ -96,15 +96,15 @@ public class SeckillController {
             return new ResponseSuccess<SeckillExcution>("执行" + SeckillStateEnum.SUCCESS.getStateInfo(), excution);
         } catch (RepeatKillException e) {
             SeckillExcution excution = new SeckillExcution(seckillId, SeckillStateEnum.REPEAT_KILL);
-            return new ResponseError<SeckillExcution>(excution);
+            return new ResponseSuccess<SeckillExcution>("重复秒杀",excution);
         } catch (SeckillCloseException e){
             SeckillExcution excution = new SeckillExcution(seckillId, SeckillStateEnum.END);
-            return new ResponseError<SeckillExcution>(excution);
+            return new ResponseSuccess<SeckillExcution>("秒杀关闭",excution);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
         SeckillExcution excution = new SeckillExcution(seckillId, SeckillStateEnum.INNER_ERROR);
-        return new ResponseError<SeckillExcution>(excution);
+        return new ResponseSuccess<SeckillExcution>("未知错误",excution);
     }
 
     @RequestMapping(value = "/time/now", method = RequestMethod.GET)

@@ -53,7 +53,7 @@ public class SeckillServiceImplTest {
 
     @Test
     public void exportSeckillURL() {
-        long id = 1004;
+        long id = 1000;
         Exposer exposer = seckillService.exportSeckillURL(id);
         logger.info("expose = {}",exposer);
     }

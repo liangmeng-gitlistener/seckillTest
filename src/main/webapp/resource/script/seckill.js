@@ -67,7 +67,7 @@ var seckill = {
             return false;
         }
     },
-
+    //  计时交互
     countDown: function (seckillId, nowTime, startTime, endTime) {
         var seckillBox = $('#seckill-box');
         if (nowTime > endTime) {

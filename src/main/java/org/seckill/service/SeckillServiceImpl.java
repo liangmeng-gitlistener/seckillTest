@@ -1,5 +1,6 @@
 package org.seckill.service;
 
+import org.seckill.dao.cache.RedisDaoImpl;
 import org.seckill.dao.itface.ISeckillDAO;
 import org.seckill.dao.itface.ISuccessKilledDAO;
 import org.seckill.dto.Exposer;
@@ -39,6 +40,8 @@ public class SeckillServiceImpl implements ISeckillService {
     private ISuccessKilledDAO successKilledDAO;
     @Autowired
     private MD5Util md5Util;
+    @Autowired
+    private RedisDaoImpl redisDao;
 
     @Override
     public List<Seckill> getSeckillList(Pageable pageable) {
@@ -54,10 +57,17 @@ public class SeckillServiceImpl implements ISeckillService {
 
     @Override
     public Exposer exportSeckillURL(long seckillId) {
-        Seckill seckill = getSeckillById(seckillId);
+        //  缓存优化，一致性建立在超时基础上
+        Seckill seckill = redisDao.getSeckill(seckillId);
         if (seckill == null) {
-            return new Exposer(false,seckillId);
+            seckill = getSeckillById(seckillId);
+            if (seckill == null) {
+                return new Exposer(false,seckillId);
+            } else {
+                redisDao.putSeckill(seckill);
+            }
         }
+
         Date startTime = seckill.getStartTime();
         Date endTime = seckill.getEndTime();
         Date now = new Date();
@@ -79,13 +89,28 @@ public class SeckillServiceImpl implements ISeckillService {
         }
         Date now = new Date();
         try {
-            int updateCount = seckillDAO.reduceNumber(seckillId, now);
-            if (updateCount <= 0){
-                throw new SeckillCloseException("seckill is closed!");
+            //  先更新，后插入行锁时间更久
+//            int updateCount = seckillDAO.reduceNumber(seckillId, now);
+//            if (updateCount <= 0){
+//                throw new SeckillCloseException("seckill is closed!");
+//            } else {
+//                int insertCount = successKilledDAO.insertSuccessKilled(seckillId, userPhone);
+//                if (insertCount <= 0) {
+//                    throw new RepeatKillException("seckill repeated!");
+//                } else {
+//                    SuccessKilled successKilled = successKilledDAO.queryByIdWithSeckill(seckillId, userPhone);
+//                    return new SeckillExcution(seckillId, SeckillStateEnum.SUCCESS, successKilled);
+//                }
+//            }
+            //  先插入，再更新效率高
+            int insertCount = successKilledDAO.insertSuccessKilled(seckillId, userPhone);
+            if (insertCount <= 0) {
+                //  防重秒
+                throw new RepeatKillException("seckill repeated!");
             } else {
-                int insertCount = successKilledDAO.insertSuccessKilled(seckillId, userPhone);
-                if (insertCount <= 0) {
-                    throw new RepeatKillException("seckill repeated!");
+                int updateCount = seckillDAO.reduceNumber(seckillId, now);
+                if (updateCount <= 0){
+                    throw new SeckillCloseException("seckill is closed!");
                 } else {
                     SuccessKilled successKilled = successKilledDAO.queryByIdWithSeckill(seckillId, userPhone);
                     return new SeckillExcution(seckillId, SeckillStateEnum.SUCCESS, successKilled);

@@ -6,6 +6,7 @@ import org.seckill.entity.Seckill;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @program: seckill
@@ -35,4 +36,10 @@ public interface ISeckillDAO {
      * @return          更新记录行数
      */
     int reduceNumber(@Param("seckillId") long seckillId, @Param("killTime") Date killTime);
+
+    /**
+     * 使用存储过程执行秒杀
+     * @param paramMap
+     */
+    void killByProcedure(Map<String, Object> paramMap);
 }

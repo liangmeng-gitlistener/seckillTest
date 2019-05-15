@@ -57,3 +57,15 @@ CREATE PROCEDURE `seckill`.`execute_seckill`(
 END ;
 $$
 -- 代表存储过程定义结束
+
+DELIMITER ;
+SET @r_result = -3;
+--  执行存储过程
+call execute_seckill(1000,13502187791,now(),@r_result);
+--  获取结果
+select @r_result;
+
+--  1。存储过程优化：事务行级锁持有的时间
+--  2。不要过度依赖存储过程。（银行用的多，互联网公司使用极少）
+--  3。简单逻辑可使用存储过程。
+--  4。单商品6000/qps
